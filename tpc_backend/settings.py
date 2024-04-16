@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+import sys
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,7 @@ SECRET_KEY = "django-insecure-n9+rg32sc=@5xod+gnh3q0g9mb*^$9-t==hgb-5@c=srsm-!nx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -73,17 +75,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "tpc_backend.wsgi.application"
 
-
+# postgres://tpc_user:95dEzeI3jyHoVWz3flE9JnIVjtDXfonN@dpg-coa1tffsc6pc7399pheg-a/tpc
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+# DATABASE_URL=postgres://tpc_user:postgress@dpg-coa1tffsc6pc7399pheg-a:5432/tpc
+
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgres://tpc_user:95dEzeI3jyHoVWz3flE9JnIVjtDXfonN@dpg-coa1tffsc6pc7399pheg-a.singapore-postgres.render.com/tpc',
+#         conn_max_age=600
+#     )
+# }
+'''
+DATABASES = {
+    'default': {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
+    }
+
+}
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -120,6 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+Media_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -55,3 +55,21 @@ class NotificationSerializer(serializers.Serializer):
         instance.created_at = validated_data.get("created_at", instance.created_at)
         instance.save()
         return instance
+class UpdateUserSerializer(serializers.Serializer):
+    class meta:
+        model = Users
+        fields = "__all__"
+    def create(self, validated_data):
+        return Users.objects.create(**validated_data)
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get("username", instance.username)
+        instance.email = validated_data.get("email", instance.email)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.is_superuser = validated_data.get("is_superuser", instance.is_superuser)
+        instance.save()
+        return instance
+    def delete(self, instance):
+        instance.delete()
+        return instance
+    

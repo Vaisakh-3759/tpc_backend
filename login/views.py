@@ -27,7 +27,19 @@ class Login(APIView):
                         
         except Exception as e:
             return Response({"message": f"unexpected error occoured(e)"},status=status.HTTP_400_BAD_REQUEST)
-
+        
+class UpdateUser(APIView):
+    def post(self, request):
+        try:
+            serializer = UpdateUserSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": f"unexpected error occoured(e)"},status=status.HTTP_400_BAD_REQUEST)
+    
 
 class Notification_API(APIView):
     def post(self, request):
@@ -35,3 +47,4 @@ class Notification_API(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
