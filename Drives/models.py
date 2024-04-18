@@ -13,7 +13,7 @@ class Drive(models.Model):
     skills = models.TextField(default='',null = False)
     gpa_limit = models.CharField(default='',null = False,max_length = 10)
     backlog = models.CharField(default='',null = False,max_length = 10)
-
+    backlog_history = models.BooleanField(default=False)
     def __str__(self):
         return self.name
     
