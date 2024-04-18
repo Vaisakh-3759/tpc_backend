@@ -27,6 +27,7 @@ class Login(APIView):
                         
         except Exception as e:
             return Response({"message": f"unexpected error occoured(e)"},status=status.HTTP_400_BAD_REQUEST)
+    pass
         
 class UpdateUser(APIView):
     def post(self, request):

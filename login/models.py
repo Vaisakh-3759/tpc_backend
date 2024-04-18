@@ -13,8 +13,12 @@ class Users(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now_add=True)
     made_password = models.CharField(max_length = 500,unique = True, null = False)
+    backlogs = models.IntegerField(default=0)
+    gpa = models.FloatField(default=0)
+    backlog_history = models.BooleanField(default=False)
     groups = models.ManyToManyField(Group, related_name='users_custom', blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='users_custom', blank=True)
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']

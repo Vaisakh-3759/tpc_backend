@@ -78,7 +78,8 @@ WSGI_APPLICATION = "tpc_backend.wsgi.application"
 # postgres://tpc_user:95dEzeI3jyHoVWz3flE9JnIVjtDXfonN@dpg-coa1tffsc6pc7399pheg-a/tpc
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-# DATABASE_URL=postgres://tpc_user:postgress@dpg-coa1tffsc6pc7399pheg-a:5432/tpc
+# DATABASE_URL=postgres://tpc_user:%2F@dpg-coa1tffsc6pc7399pheg-a:5432/tpc
+# set DATABASE_URL=postgres://tpc_user:95dEzeI3jyHoVWz3flE9JnIVjtDXfonN@dpg-coa1tffsc6pc7399pheg-a.singapore-postgres.render.com/tpc
 
 
 DATABASES = {
@@ -91,6 +92,7 @@ DATABASES = {
 #         conn_max_age=600
 #     )
 # }
+
 '''
 DATABASES = {
     'default': {
