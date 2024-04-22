@@ -82,8 +82,14 @@ WSGI_APPLICATION = "tpc_backend.wsgi.application"
 # set DATABASE_URL=postgres://tpc_user:95dEzeI3jyHoVWz3flE9JnIVjtDXfonN@dpg-coa1tffsc6pc7399pheg-a.singapore-postgres.render.com/tpc
 
 
+# DATABASES = {
+#     'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+# }
 DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 # DATABASES = {
