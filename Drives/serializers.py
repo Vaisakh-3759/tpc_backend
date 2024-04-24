@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import *
 
 class DriveSerializer(serializers.ModelSerializer):
-    class meta :
+    class Meta:
         model = Drive
         fields = "__all__"
         def create(self, validated_data):
@@ -19,7 +19,7 @@ class DriveSerializer(serializers.ModelSerializer):
             return instance
         
 class AppliedDrivesSerializer(serializers.ModelSerializer):
-    class meta :
+    class Meta:
         model = AppliedDrives
         fields = [
             "drive",

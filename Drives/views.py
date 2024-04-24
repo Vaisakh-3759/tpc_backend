@@ -12,7 +12,7 @@ from . models import *
 class Drive_API(APIView):
     def post(self, request):
         try:
-            name = request.data()
+            name = request.data.copy()
             print(name)
             serializer = DriveSerializer(data=request.data)
             if serializer.is_valid():
