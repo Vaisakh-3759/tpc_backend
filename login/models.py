@@ -12,7 +12,7 @@ class Users(AbstractUser):
     last_name = models.CharField(max_length=255, verbose_name=_('Last Name'))
     is_superuser = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now_add=True)
-    made_password = models.CharField(max_length = 500,unique = True, null = False)
+    made_password = models.CharField(max_length = 500, null = False)
     backlogs = models.IntegerField(default=0)
     gpa = models.FloatField(default=0)
     backlog_history = models.BooleanField(default=False)
@@ -21,13 +21,13 @@ class Users(AbstractUser):
 
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
-    
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.password = make_password(self.password)
-        super(Users, self).save(*args, **kwargs)
-
+            self.set_password(self.made_password)
+        super(Users, self).save(*args, **kwargs) 
+        
     def __str__(self):
         return self.email
 class Admins(models.Model):

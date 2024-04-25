@@ -55,7 +55,7 @@ class NotificationSerializer(serializers.Serializer):
         instance.created_at = validated_data.get("created_at", instance.created_at)
         instance.save()
         return instance
-class AdminUserSerializer(serializers.Serializer):
+class AdminUpdateSerializer(serializers.Serializer):
     class Meta:
         model = Users
         fields = "__all__"
@@ -72,6 +72,3 @@ class AdminUserSerializer(serializers.Serializer):
     def delete(self, instance):
         instance.delete()
         return instance
-
-    def create(self, validated_data):
-        return Users.objects.create(**validated_data)
