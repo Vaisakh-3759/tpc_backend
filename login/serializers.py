@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import check_password
 from .models import *
 
 class LoginSerializer(serializers.Serializer):
-    class meta:
+    class Meta:
         model = Users
         fields =[
             "username",
@@ -36,7 +36,7 @@ class LoginSerializer(serializers.Serializer):
         else:
             raise serializers.ValidationError("Invalid username or password.")
 class NotificationSerializer(serializers.Serializer):
-    class meta:
+    class Meta:
         model = Notification
         fields = [
             "user",
@@ -55,8 +55,8 @@ class NotificationSerializer(serializers.Serializer):
         instance.created_at = validated_data.get("created_at", instance.created_at)
         instance.save()
         return instance
-class UpdateUserSerializer(serializers.Serializer):
-    class meta:
+class AdminUserSerializer(serializers.Serializer):
+    class Meta:
         model = Users
         fields = "__all__"
     def create(self, validated_data):
@@ -72,4 +72,6 @@ class UpdateUserSerializer(serializers.Serializer):
     def delete(self, instance):
         instance.delete()
         return instance
-    
+
+    def create(self, validated_data):
+        return Users.objects.create(**validated_data)

@@ -17,7 +17,7 @@ class Drive_API(APIView):
             serializer = DriveSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({"message":"Drive creation successfull"}, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
@@ -27,12 +27,16 @@ class Drive_API(APIView):
     def delete(self, request):
         try:
             drive_instance = request.data.get('name')
-            for drive in Drive.objects.filter(name=drive_instance):
-                drive.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            check_if_exists = Drive.objects.filter(name = drive_instance).exists()
+            if not check_if_exists:
+                return Response({"message":"Drive doesnot exist"},status=status.HTTP_404_NOT_FOUND)
+            else:
+                for drive in Drive.objects.filter(name=drive_instance):
+                    drive.delete()
+                return Response({"message":"Drive deleted successfully"},status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
         try:
@@ -45,13 +49,19 @@ class Drive_API(APIView):
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        try:
+            drives = Drive.objects.all()
+            serializer = DriveSerializer(drives, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class Apply_API(APIView):
     def post(self, request):
         try:
-            drive_instance = request.data()
-            
-            serializer = AppliedDrivesSerializer(drive_instance)
+            serializer = AppliedDrivesSerializer(request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -59,4 +69,4 @@ class Apply_API(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
