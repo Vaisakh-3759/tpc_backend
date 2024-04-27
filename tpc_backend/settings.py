@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "corsheaders",
     "django.contrib.staticfiles",
     "login",
     "Password",
@@ -146,6 +147,7 @@ USE_TZ = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'https://example.com', 
 ]
 
 

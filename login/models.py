@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 import uuid
 
 class Users(models.Model):
-    username = models.CharField(max_length=255)
+    username = models.CharField(unique= True,max_length=255)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True, verbose_name=_('Email Address'))
     first_name = models.CharField(max_length=255, verbose_name=_('First Name'))
@@ -24,8 +24,9 @@ class Users(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.password = make_password(self.made_password)
+            self.made_password = make_password(self.made_password)
         super(Users, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.email

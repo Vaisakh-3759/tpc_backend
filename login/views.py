@@ -44,38 +44,38 @@ class AdminUpdate(APIView):
         
     def delete(self, request):
         try:
-            username = request.data.get('name')
-            check_if_exists = Users.objects.filter(name = username).exists()
+            username = request.data.get('username')
+            check_if_exists = Users.objects.filter(username = username).exists()
             if not check_if_exists:
                 return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
             else:
-                for drive in Users.objects.filter(name=username):
+                for drive in Users.objects.filter(username=username):
                     drive.delete()
                 return Response({"message":"user deleted successfully"},status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             print(e)
             return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
         
-    def get(self,request):
-        try:
-            username = request.data.get('name')
-            check_if_exists = Users.objects.filter(username = username).exists()
-            if not check_if_exists:
-                return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
-            else:
-                serializer = AdminUpdateSerializer(Users.objects.get(id=username))
-                return Response({"message":"User details","data":serializer.data},status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response({"message":f"Error occour{e}"},status=status.HTTP_400_BAD_REQUEST)
-    # def get(self, request):
+    # def get(self,request):
     #     try:
-    #         drives = Users.objects.all()
-    #         serializer = AdminUpdateSerializer(drives, many=True)
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #         username = request.data.get('name')
+    #         check_if_exists = Users.objects.filter(username = username).exists()
+    #         if not check_if_exists:
+    #             return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
+    #         else:
+    #             serializer = AdminUpdateSerializer(Users.objects.get(id=username))
+    #             return Response({"message":"User details","data":serializer.data},status=status.HTTP_200_OK)
     #     except Exception as e:
     #         print(e)
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+    #         return Response({"message":f"Error occour{e}"},status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        try:
+            drives = Users.objects.all()
+            serializer = AdminUpdateSerializer(drives, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class Notification_API(APIView):
     def post(self, request):

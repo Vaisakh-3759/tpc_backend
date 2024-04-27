@@ -55,10 +55,13 @@ class NotificationSerializer(serializers.Serializer):
         instance.created_at = validated_data.get("created_at", instance.created_at)
         instance.save()
         return instance
-class AdminUpdateSerializer(serializers.Serializer):
+
+
+class AdminUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = "__all__"
+
     def create(self, validated_data):
         return Users.objects.create(**validated_data)
     def update(self, instance, validated_data):
