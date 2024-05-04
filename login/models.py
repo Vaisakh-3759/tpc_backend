@@ -33,15 +33,9 @@ class Users(models.Model):
 
 class Admins(models.Model):
     user = models.OneToOneField(Users, on_delete=models.CASCADE)
-    is_superadmin = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_superadmin = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.email

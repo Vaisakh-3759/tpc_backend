@@ -15,14 +15,14 @@ class Drive(models.Model):
     gpa_limit = models.CharField(default='',null = False,max_length = 10)
     backlog_limit = models.CharField(default='',null = False,max_length = 10)
     backlog_history = models.BooleanField(default=False)
-    #is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
     
     
 class AppliedDrives(models.Model):
+    apply_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     drive = models.ForeignKey(Drive, on_delete=models.CASCADE)
-    driv_id = models.TextField(max_length=400)
     st_id = models.TextField(max_length=400)
     applied_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):

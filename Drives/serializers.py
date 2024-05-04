@@ -23,11 +23,7 @@ class DriveSerializer(serializers.ModelSerializer):
 class AppliedDrivesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppliedDrives
-        fields = [
-            "drive",
-            "dr_id",
-            "st_id"
-        ]
+        fields = "__all__"
         def create(self, validated_data):
             return AppliedDrives.objects.create(**validated_data)
         def update(self, instance, validated_data):

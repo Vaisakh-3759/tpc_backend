@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import render
 from . serializers import *
-from . models import *
+from . models import AppliedDrives, Drive
 
 class Drive_API(APIView):
     def post(self, request):
@@ -58,10 +58,11 @@ class Drive_API(APIView):
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class Apply_API(APIView):
+class AppliedDrives_API(APIView):
+
     def post(self, request):
         try:
-            serializer = AppliedDrivesSerializer(request.data)
+            serializer = AppliedDrivesSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -69,12 +70,14 @@ class Apply_API(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
-            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-    def get(self):
+            return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    def get(self, request):
         try:
-            applied_drives = AppliedDrives.objects.all()
+            std_id = request.data.get('st_id')
+            applied_drives = AppliedDrives.objects.filter(st_id = std_id)
             serializer = AppliedDrivesSerializer(applied_drives, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+    
