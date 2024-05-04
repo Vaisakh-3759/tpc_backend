@@ -5,16 +5,10 @@ from django.contrib.auth.hashers import check_password
 
 from .models import *
 
-class LoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
-        fields =[
-            "username",
-            "email",
-            "id",
-            ""
-            ]
-        
+        fields ="__all__"
     def check(self, validated_data):
         email = validated_data.get("email")
         password = validated_data.get("password")

@@ -7,29 +7,33 @@ from django.conf import settings
 from django.shortcuts import render
 from . serializers import *
 from . models import *
-from Drives import models as drive_models
+from Drives import models 
+from django.contrib.auth.hashers import check_password
 
 class Login(APIView):
-    def get(self,request):
+    def post(self, request):
         try:
-            email = request.data['email']
-            passwd = request.data['password']
-            user_data = Users.objects.get(username = email)
-            check_if_exists = Users.objects.filter(username = email).exists()
-            if check_if_exists:
-                serializer = LoginSerializer(user_data)
-                if user_data.password == passwd:
-                    return Response({"message":"Login successfull","data":serializer.data},status=status.HTTP_200_OK)
-                else:
-                    return Response({"message":"Invalid password"},status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({"message":"Username doesnot exist"},status=status.HTTP_404_NOT_FOUND)
-                        
+            email_id = request.data.get('email')
+            password = request.data.get('password')
+            if not email_id or not password:
+                return Response({"message": "Email and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user = Users.objects.filter(email=email_id).first()
+            print(user)
+            if not user:
+                return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not (password == user.made_password):
+                print(user.made_password)
+                print(password)
+                return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
+
+            serializer = LoginSerializer(Users.objects.get(email=email_id))
+            return Response({"message": "Login successful", "data": serializer.data}, status=status.HTTP_200_OK)
+
         except Exception as e:
-            return Response({"message": f"unexpected error occoured(e)"},status=status.HTTP_400_BAD_REQUEST)
-    pass
-
-
+            return Response({"message": f"An unexpected error occurred {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 class AdminUpdate(APIView):
     def post(self, request):
         try:
@@ -55,28 +59,40 @@ class AdminUpdate(APIView):
         except Exception as e:
             print(e)
             return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
-        
-    # def get(self,request):
-    #     try:
-    #         username = request.data.get('name')
-    #         check_if_exists = Users.objects.filter(username = username).exists()
-    #         if not check_if_exists:
-    #             return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
-    #         else:
-    #             serializer = AdminUpdateSerializer(Users.objects.get(id=username))
-    #             return Response({"message":"User details","data":serializer.data},status=status.HTTP_200_OK)
-    #     except Exception as e:
-    #         print(e)
-    #         return Response({"message":f"Error occour{e}"},status=status.HTTP_400_BAD_REQUEST)
-    def get(self, request):
+    
+    
+    def get(self,request):
         try:
-            drives = Users.objects.all()
-            serializer = AdminUpdateSerializer(drives, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            username = request.data.get('username')
+            check_if_exists = Users.objects.filter(username = username).exists()
+            
+            if not check_if_exists:
+                return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
+            else:
+                serializer = AdminUpdateSerializer(Users.objects.get(username=username))
+                return Response({"message":"User details","data":serializer.data},status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({"message":f"Error occour{e}"},status=status.HTTP_400_BAD_REQUEST)
+        
+    def patch(self,request):
+        try:
+            email = request.data.get('email')
+            check_if_exists = Users.objects.filter(email = email).exists()
+            if not check_if_exists:
+                return Response({"message":"User doesnot exist"},status=status.HTTP_404_NOT_FOUND)
+            else:
+                user = Users.objects.get(email=email)
+                serializer = LoginSerializer(user,data=request.data,partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({"message":"User details updated successfully","data":serializer.data},status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(e)
+            return Response({"message":f"Error occour{e}"},status=status.HTTP_400_BAD_REQUEST)
+        
 class Notification_API(APIView):
     def post(self, request):
         serializer = NotificationSerializer(data=request.data)

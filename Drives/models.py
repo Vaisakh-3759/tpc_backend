@@ -15,6 +15,7 @@ class Drive(models.Model):
     gpa_limit = models.CharField(default='',null = False,max_length = 10)
     backlog_limit = models.CharField(default='',null = False,max_length = 10)
     backlog_history = models.BooleanField(default=False)
+    #is_active = models.BooleanField(default=True)
     def __str__(self):
         return self.name
     

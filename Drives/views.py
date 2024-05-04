@@ -70,3 +70,11 @@ class Apply_API(APIView):
         except Exception as e:
             print(e)
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
+    def get(self):
+        try:
+            applied_drives = AppliedDrives.objects.all()
+            serializer = AppliedDrivesSerializer(applied_drives, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
