@@ -46,17 +46,17 @@ class Login(APIView):
                 return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"message":f"An unexpected error occurred {e}"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-# class Admin(APIView):
-#     def post(self, request):
-#         try:
-#             serializer = AdminUpdateSerializer(data=request.data)
-#             if serializer.is_valid():
-#                 serializer.save()
-#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-#             else:
-#                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#         except Exception as e:
-#             return Response({"message": f"unexpected error occoured{e}"},status=status.HTTP_400_BAD_REQUEST)
+class Admin(APIView):
+    def post(self, request):
+        try:
+            serializer = AdminUpdateSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message": f"unexpected error occoured{e}"},status=status.HTTP_400_BAD_REQUEST)
 
 class AdminUpdate(APIView):
     def post(self, request):

@@ -26,12 +26,12 @@ class Drive_API(APIView):
 
     def delete(self, request):
         try:
-            drive_instance = request.data.get('name')
-            check_if_exists = Drive.objects.filter(name = drive_instance).exists()
+            drive_instance = request.data.get('drive_id')
+            check_if_exists = Drive.objects.filter(drive_id = drive_instance).exists()
             if not check_if_exists:
                 return Response({"message":"Drive doesnot exist"},status=status.HTTP_404_NOT_FOUND)
             else:
-                for drive in Drive.objects.filter(name=drive_instance):
+                for drive in Drive.objects.filter(drive_id=drive_instance):
                     drive.delete()
                 return Response({"message":"Drive deleted successfully"},status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
@@ -40,12 +40,14 @@ class Drive_API(APIView):
 
     def patch(self, request):
         try:
-            drive_instance = request.data.get('name')
-            new_name = request.data.get('new_name')
-            for drive in Drive.objects.filter(name=drive_instance):
-                drive.name = new_name
-                drive.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            id = request.data.get('drive_id')
+            user = Drive.objects.get(drive_id=id)
+            serializer = DriveSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
