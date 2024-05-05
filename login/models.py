@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Group, Permission
 import uuid
+from django.utils import timezone
 
 class Users(models.Model):
     username = models.CharField(unique= True,max_length=255)
@@ -16,6 +17,7 @@ class Users(models.Model):
     backlogs = models.IntegerField(default=0)
     gpa = models.FloatField(default=0)
     backlog_history = models.BooleanField(default=False)
+    department = models.CharField(max_length=255, default="CSE")
     groups = models.ManyToManyField(Group, related_name='users_custom', blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name='users_custom', blank=True)
 
@@ -40,12 +42,6 @@ class Admins(models.Model):
     def __str__(self):
         return self.user.email
 class Notification(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
-    message = models.TextField()
-    is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    drive = models.ForeignKey('Drives.Drive', on_delete=models.CASCADE, null=False, blank=False)
-
-    def __str__(self):
-        return f"{self.user.username}: {self.message}"
-    
+    message = models.TextField(default="message")
+    created_at = models.DateField(default=timezone.now)
+    subjects = models.CharField(max_length=255, default="Notification")

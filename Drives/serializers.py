@@ -27,9 +27,9 @@ class AppliedDrivesSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
             return AppliedDrives.objects.create(**validated_data)
         def update(self, instance, validated_data):
-            instance.drive = validated_data.get('drive', instance.drive)
-            instance.dr_id = validated_data.get('dr_id', instance.dr_id)
-            instance.st_id = validated_data.get('st_id', instance.st_id)
+            instance.subject = validated_data.get('subject', instance.subject)
+            instance.message = validated_data.get('message', instance.message)
+            instance.created_at = validated_data.get('created_at', instance.created_at)
             instance.save()
             return instance
             

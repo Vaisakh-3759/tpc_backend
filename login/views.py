@@ -34,6 +34,30 @@ class Login(APIView):
         except Exception as e:
             return Response({"message": f"An unexpected error occurred {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    def patch(self,request):
+        try:
+            id = request.data.get('id')
+            user = Users.objects.get(id=id)
+            serializer = LoginSerializer(user,data=request.data,partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"message":"User details updated successfully","data":serializer.data},status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"message":f"An unexpected error occurred {e}"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+# class Admin(APIView):
+#     def post(self, request):
+#         try:
+#             serializer = AdminUpdateSerializer(data=request.data)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+#             else:
+#                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         except Exception as e:
+#             return Response({"message": f"unexpected error occoured{e}"},status=status.HTTP_400_BAD_REQUEST)
+
 class AdminUpdate(APIView):
     def post(self, request):
         try:
@@ -99,4 +123,13 @@ class Notification_API(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request):
+        try:
+            notifications = Notification.objects.all()
+            serializer = NotificationSerializer(notifications, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

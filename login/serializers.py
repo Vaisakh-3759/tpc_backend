@@ -29,24 +29,27 @@ class LoginSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Invalid username or password.")
         else:
             raise serializers.ValidationError("Invalid username or password.")
-class NotificationSerializer(serializers.Serializer):
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get("username", instance.username)
+        instance.email = validated_data.get("email", instance.email)
+        instance.first_name = validated_data.get("first_name", instance.first_name)
+        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.backlogs = validated_data.get("backlogs", instance.backlogs)
+        instance.gpa = validated_data.get("gpa", instance.gpa)
+        instance.backlog_history = validated_data.get("backlog_history", instance.backlog_history)
+        instance.save()
+        return instance
+
+class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = [
-            "user",
-            "message",
-            "is_read",
-            "drive",
-            "created_at"
-            ]
+        fields = ['message', 'created_at', 'subjects']
     def create(self, validated_data):
         return Notification.objects.create(**validated_data)
     def update(self, instance, validated_data):
-        instance.user = validated_data.get("user", instance.user)
         instance.message = validated_data.get("message", instance.message)
-        instance.is_read = validated_data.get("is_read", instance.is_read)
-        instance.drive = validated_data.get("drive", instance.drive)
         instance.created_at = validated_data.get("created_at", instance.created_at)
+        instance.subjects = validated_data.get("subjects", instance.subjects)
         instance.save()
         return instance
 
@@ -59,11 +62,17 @@ class AdminUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Users.objects.create(**validated_data)
     def update(self, instance, validated_data):
-        instance.username = validated_data.get("username", instance.username)
-        instance.email = validated_data.get("email", instance.email)
-        instance.first_name = validated_data.get("first_name", instance.first_name)
-        instance.last_name = validated_data.get("last_name", instance.last_name)
-        instance.is_superuser = validated_data.get("is_superuser", instance.is_superuser)
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
+        instance.last_login = validated_data.get('last_login', instance.last_login)
+        instance.backlogs = validated_data.get('backlogs', instance.backlogs)
+        instance.gpa = validated_data.get('gpa', instance.gpa)
+        instance.backlog_history = validated_data.get('backlog_history', instance.backlog_history)
+        instance.groups = validated_data.get('groups', instance.groups)
+        instance.user_permissions = validated_data.get('user_permissions', instance.user_permissions)
         instance.save()
         return instance
     def delete(self, instance):
