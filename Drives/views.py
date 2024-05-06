@@ -73,7 +73,7 @@ class AppliedDrives_API(APIView):
         except Exception as e:
             print(e)
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    def get(self, request):
+    def patch(self, request):
         try:
             std_id = request.data.get('st_id')
             applied_drives = AppliedDrives.objects.filter(st_id = std_id)
