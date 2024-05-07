@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import *
 from rest_framework.response import Response
 from rest_framework import status
+from login.models import Users
 
 class DriveSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,4 +33,14 @@ class AppliedDrivesSerializer(serializers.ModelSerializer):
             instance.created_at = validated_data.get('created_at', instance.created_at)
             instance.save()
             return instance
-            
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Users
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'department',
+            'email',
+        ]
