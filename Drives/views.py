@@ -83,7 +83,7 @@ class AppliedDrives_API(APIView):
         except Exception as e:
             print(e)
             return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
-    def post(self, request):
+    def patc(self, request):
         try:
             drive_id = request.data.get('drive_id')
             serializer = AppliedDrivesSerializer(AppliedDrives.objects.filter(drive_id=drive_id), many=True)
