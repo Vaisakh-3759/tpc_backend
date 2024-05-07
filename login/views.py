@@ -23,9 +23,9 @@ class Login(APIView):
             if not user:
                 return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not check_password(password, user.made_password):
-                print(user.made_password)
-                print(password)
+            if not (password == user.made_password):
+                # print(user.made_password)
+                # print(password)
                 return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
             serializer = LoginSerializer(Users.objects.get(email=email_id))
