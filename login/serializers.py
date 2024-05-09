@@ -60,7 +60,7 @@ class AdminUpdateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        # validated_data['made_password'] = make_password(validated_data.get('made_password'))
+        validated_data['made_password'] = make_password(validated_data.get('made_password'))
         return Users.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
