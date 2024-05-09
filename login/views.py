@@ -23,9 +23,9 @@ class Login(APIView):
             if not user:
                 return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not (password == user.made_password):
-                # print(user.made_password)
-                # print(password)
+            if not check_password(password , user.made_password):
+                print(user.made_password)
+                print(password)
                 return Response({"message": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
             serializer = LoginSerializer(Users.objects.get(email=email_id))
@@ -34,6 +34,14 @@ class Login(APIView):
         except Exception as e:
             return Response({"message": f"An unexpected error occurred {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    # def delete(self, request):
+    #     try:
+    #         user = Users.objects.all()
+    #         user.delete()
+            
+    #         return Response({"message":"user deleted successfully"},status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
     def patch(self,request):
         try:
             id = request.data.get('id')
@@ -46,17 +54,6 @@ class Login(APIView):
                 return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"message":f"An unexpected error occurred {e}"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-class Admin(APIView):
-    def post(self, request):
-        try:
-            serializer = AdminUpdateSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({"message": f"unexpected error occoured{e}"},status=status.HTTP_400_BAD_REQUEST)
 
 class AdminUpdate(APIView):
     def post(self, request):
@@ -130,6 +127,14 @@ class Notification_API(APIView):
             notifications = Notification.objects.all()
             serializer = NotificationSerializer(notifications, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    def delete(self, request):
+        try:
+            notifications = Notification.objects.all()
+            notifications.delete()
+            return Response({"message": "All notifications deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         

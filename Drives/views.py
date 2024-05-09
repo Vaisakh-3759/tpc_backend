@@ -24,20 +24,27 @@ class Drive_API(APIView):
         except Exception as e:
             print(e)
             return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
-
     def delete(self, request):
         try:
-            drive_instance = request.data.get('drive_id')
-            check_if_exists = Drive.objects.filter(drive_id = drive_instance).exists()
-            if not check_if_exists:
-                return Response({"message":"Drive doesnot exist"},status=status.HTTP_404_NOT_FOUND)
-            else:
-                for drive in Drive.objects.filter(drive_id=drive_instance):
-                    drive.delete()
-                return Response({"message":"Drive deleted successfully"},status=status.HTTP_204_NO_CONTENT)
+            deive = Drive.objects.all()
+            deive.delete()
+            return Response({"message":"Drive deleted successfully"},status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             print(e)
             return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
+    # def delete(self, request):
+    #     try:
+    #         drive_instance = request.data.get('drive_id')
+    #         check_if_exists = Drive.objects.filter(drive_id = drive_instance).exists()
+    #         if not check_if_exists:
+    #             return Response({"message":"Drive doesnot exist"},status=status.HTTP_404_NOT_FOUND)
+    #         else:
+    #             for drive in Drive.objects.filter(drive_id=drive_instance):
+    #                 drive.delete()
+    #             return Response({"message":"Drive deleted successfully"},status=status.HTTP_204_NO_CONTENT)
+    #     except Exception as e:
+    #         print(e)
+    #         return Response({"message":"Error occour"},status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request):
         try:
